@@ -23,7 +23,6 @@ unrest in Bangladesh, Mongolia's president resigning, and the US
 Senate rejecting an Iran war-powers resolution 51-48.
 """
 
-import math
 import os
 import struct
 import zlib
@@ -112,7 +111,7 @@ class Canvas:
                     self.set(x, y, colour)
 
 
-# A 5x7 bitmap font. Each glyph is 7 rows of 5 cells, "1" on, "0" off.
+# A 5x7 bitmap font. Each glyph is 7 rows of 5 cells, "#" on, "." off.
 FONT = {
     "A": ["01110", "10001", "10001", "11111", "10001", "10001", "10001"],
     "B": ["11110", "10001", "10001", "11110", "10001", "10001", "11110"],
@@ -235,6 +234,7 @@ def draw_masthead(cv):
 
 def draw_summit(cv, x, y, w, h):
     panel(cv, x, y, w, h, "SHENZHEN  -  THE SUMMIT", RED)
+    # Globe behind the three leaders.
     cv.disc(x + 280, y + 92, 52, TEAL)
     cv.ring(x + 280, y + 92, 52, 2, WHITE)
     cv.line(x + 228, y + 92, x + 332, y + 92, 3, WHITE)
@@ -252,6 +252,7 @@ def draw_summit(cv, x, y, w, h):
 
 def draw_icj(cv, x, y, w, h):
     panel(cv, x, y, w, h, "THE HAGUE  -  JUSTICE", TEAL)
+    # Scales of justice.
     cx = x + w // 2
     cv.line(cx, y + 52, cx, y + 150, 5, INK)
     cv.line(cx - 78, y + 62, cx + 78, y + 62, 5, INK)
@@ -259,8 +260,10 @@ def draw_icj(cv, x, y, w, h):
     cv.line(cx - 78, y + 62, cx - 48, y + 118, 3, INK)
     cv.line(cx + 78, y + 62, cx + 48, y + 118, 3, INK)
     cv.line(cx + 78, y + 62, cx + 108, y + 118, 3, INK)
-    cv.poly([(cx - 118, y + 118), (cx - 38, y + 118), (cx - 78, y + 148)], GOLD)
-    cv.poly([(cx + 38, y + 118), (cx + 118, y + 118), (cx + 78, y + 148)], GOLD)
+    cv.poly([(cx - 118, y + 118), (cx - 38, y + 118), (cx - 78, y + 148)],
+            GOLD)
+    cv.poly([(cx + 38, y + 118), (cx + 118, y + 118), (cx + 78, y + 148)],
+            GOLD)
     cv.disc(cx, y + 52, 9, RED)
     cv.rect(x + 16, y + 158, w - 32, 4, LIGHT)
     wrap(cv, x + 16, y + 170, w - 32,
@@ -273,10 +276,10 @@ def draw_cop31(cv, x, y, w, h):
     panel(cv, x, y, w, h, "ANTALYA  -  CLIMATE", TEAL)
     cv.disc(x + 58, y + 78, 26, GOLD)
     for a in range(0, 360, 45):
+        import math
         dx = int(38 * math.cos(math.radians(a)))
         dy = int(38 * math.sin(math.radians(a)))
-        cv.line(x + 58 + dx, y + 78 + dy,
-                x + 58 + int(50 * math.cos(math.radians(a))),
+        cv.line(x + 58 + dx, y + 78 + dy, x + 58 + int(50 * math.cos(math.radians(a))),
                 y + 78 + int(50 * math.sin(math.radians(a))), 4, GOLD)
     wrap(cv, x + 104, y + 52, w - 120,
          "COP31 TALKS STALL IN ANTALYA", 3, INK, gap=4)
@@ -286,6 +289,7 @@ def draw_cop31(cv, x, y, w, h):
 
 def draw_hormuz(cv, x, y, w, h):
     panel(cv, x, y, w, h, "THE GULF  -  ENERGY", RED)
+    # Tanker on waves.
     cv.poly([(x + 30, y + 92), (x + 190, y + 92), (x + 172, y + 122),
              (x + 48, y + 122)], INK)
     cv.rect(x + 52, y + 62, 34, 30, RED)
@@ -315,6 +319,7 @@ def draw_bridge(cv, x, y, w, h):
 
 def draw_gaza(cv, x, y, w, h):
     panel(cv, x, y, w, h, "GAZA  -  THE CEASEFIRE", RED)
+    # A ceasefire line, crossed by an arrow.
     cv.line(x + 24, y + 92, x + 220, y + 92, 4, GOLD)
     cv.line(x + 60, y + 140, x + 180, y + 50, 5, RED)
     cv.poly([(x + 180, y + 50), (x + 158, y + 52), (x + 176, y + 72)], RED)
@@ -328,15 +333,18 @@ def draw_gaza(cv, x, y, w, h):
 def main():
     cv = Canvas()
     draw_masthead(cv)
+    # Hero row, 358 high.
     draw_summit(cv, 28, 162, 560, 358)
     wrap(cv, 44, 162 + 302, 560 - 32,
          "FOUR-POINT DECLARATION TOWARD PEACE. NO MAJOR DEAL ON UKRAINE.",
          2, GREY, gap=4)
     draw_icj(cv, 612, 162, 384, 358)
+    # Middle rows, 168 high each.
     draw_cop31(cv, 28, 532, 472, 168)
     draw_hormuz(cv, 524, 532, 472, 168)
     draw_bridge(cv, 28, 712, 472, 168)
     draw_gaza(cv, 524, 712, 472, 168)
+    # Ticker.
     cv.rect(28, 892, 968, 108, INK)
     draw_text(cv, 44, 908, "ALSO ON 19 NOVEMBER:", 2, GOLD)
     wrap(cv, 44, 932, 968 - 32,
